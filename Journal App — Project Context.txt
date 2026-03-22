@@ -1,0 +1,46 @@
+# Journal App — Project Context
+
+## What this is
+A React + Vite journaling web app with a journal book aesthetic.
+Built from a Figma design: https://www.figma.com/design/TYpQhrAUE1l3OJfPL4ZrUz/
+
+## Tech stack
+- React (single JSX file for now, src/App.jsx)
+- Vite
+- No external dependencies beyond React
+- Target deployment: Vercel
+
+## Design palette
+- Cream: #f9f1eb
+- Sand: #e8ddd0
+- Stone: #d4c9bc
+- Mist: #c9b9aa
+- Driftwood: #9b8e82
+- Ink: #3d3028
+- Coral: #e8847a
+- Font: Georgia, serif throughout
+
+## Screens built
+1. Onboarding — add first goal
+2. Menu / Nav — central hub
+3. Dashboard — habit checklist + mini calendar
+4. Goals — add/edit/delete goals
+5. Journal — calendar view with draggable stickers + photo upload
+6. Tracker — weekly/monthly habit streaks
+7. Reports — weekly/monthly completion + mood
+8. Settings — theme toggle, notifications
+
+## Key features
+- Sticker peel animation on drag (transform + shadow)
+- Photo upload opens local file picker, places photo draggably
+- All data saves in React state (no backend, no localStorage yet)
+- Dark/light mode toggle
+
+## Known issues to fix
+[LIST YOUR PROBLEMS HERE before starting Claude Code]
+
+## Assets
+⚠️ Figma asset URLs expire — before deploying to Vercel,
+download all images from Figma, place in /public/assets/,
+and update the constants at the top of App.jsx.
+Current constants are at the top of App.jsx labeled with FIGMA ASSETS.
