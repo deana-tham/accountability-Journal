@@ -258,12 +258,11 @@ const PlacedSticker = ({ sticker, onRemove }) => {
 // ── SCREEN 1: Onboarding ──────────────────────────────────────────────────────
 const OnboardingScreen = ({ onDone, goals, setGoals }) => {
   const [goalText, setGoalText] = useState("");
-  const [type,     setType]     = useState("daily");
   const [showBox,  setShowBox]  = useState(false);
 
   const addGoal = () => {
     if (!goalText.trim()) return;
-    setGoals(g => [...g, { id: Date.now(), text: goalText.trim(), type }]);
+    setGoals(g => [...g, { id: Date.now(), text: goalText.trim() }]);
     setGoalText(""); setShowBox(false);
   };
 
@@ -273,40 +272,36 @@ const OnboardingScreen = ({ onDone, goals, setGoals }) => {
         <div style={{ padding: "10px 16px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
             <button onClick={() => setShowBox(true)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, color: T.coral, lineHeight: 1, padding: 0 }}>+</button>
-            <span style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.driftwood, borderBottom: `1px solid ${T.mist}`, paddingBottom: 2 }}>Add your goals</span>
+            <span style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.driftwood, borderBottom: `1px solid ${T.mist}`, paddingBottom: 2 }}>Who do you want to become?</span>
           </div>
           <Divider />
-          {goals.length === 0 && <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, fontStyle: "italic", marginTop: 8 }}>No goals yet — press + to begin</p>}
+          {goals.length === 0 && <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, fontStyle: "italic", marginTop: 8 }}>No identity goals yet — press + to begin</p>}
           {goals.map(g => (
-            <div key={g.id} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-              <span style={{ fontSize: 9, color: T.coral }}>●</span>
-              <span style={{ fontFamily: "Georgia, serif", fontSize: 12, color: T.ink }}>{g.text}</span>
-              <span style={{ fontSize: 9, color: T.mist, marginLeft: "auto" }}>{g.type}</span>
+            <div key={g.id} style={{ display: "flex", alignItems: "flex-start", gap: 6, marginBottom: 6 }}>
+              <span style={{ fontSize: 9, color: T.coral, marginTop: 3 }}>●</span>
+              <span style={{ fontFamily: "Georgia, serif", fontSize: 12, color: T.ink, lineHeight: 1.5 }}>{g.text}</span>
             </div>
           ))}
-          {goals.length > 0 && <div style={{ marginTop: 16 }}><PillBtn onClick={onDone} small>Let's go →</PillBtn></div>}
+          {goals.length > 0 && <div style={{ marginTop: 16 }}><PillBtn onClick={onDone} small>Let's begin →</PillBtn></div>}
         </div>
       </LeftPage>
       <RightPage>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "0 20px" }}>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.driftwood, fontStyle: "italic", textAlign: "center", lineHeight: 1.8 }}>"Small steps, taken consistently,<br />become the story of your life."</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, color: T.driftwood, fontStyle: "italic", textAlign: "center", lineHeight: 1.9 }}>"The gap between who you want<br />to be and who you are is closed<br />only through action."</p>
           <div style={{ width: 30, height: 1, background: T.stone, margin: "16px 0" }} />
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, textAlign: "center" }}>Start by adding at least one goal.</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, textAlign: "center" }}>Start with one identity statement.</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist, textAlign: "center", marginTop: 8, fontStyle: "italic" }}>e.g. "I am someone who moves<br />their body every day."</p>
         </div>
       </RightPage>
       {showBox && (
         <Modal onClose={() => setShowBox(false)}>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: T.ink, marginBottom: 12 }}>What's your new goal?</p>
-          <input value={goalText} onChange={e => setGoalText(e.target.value)} onKeyDown={e => e.key === "Enter" && addGoal()} placeholder="start typing..." autoFocus
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: T.ink, marginBottom: 4 }}>Add an identity goal</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.driftwood, marginBottom: 12, fontStyle: "italic" }}>Who do you want to become?</p>
+          <input value={goalText} onChange={e => setGoalText(e.target.value)} onKeyDown={e => e.key === "Enter" && addGoal()} placeholder="I am someone who..." autoFocus
             style={{ width: "100%", boxSizing: "border-box", padding: "8px 12px", borderRadius: 10, border: `1px solid ${T.stone}`, background: T.white, fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, outline: "none", marginBottom: 14 }} />
-          <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
-            {["daily","weekly","monthly"].map(t => (
-              <button key={t} onClick={() => setType(t)} style={{ fontFamily: "Georgia, serif", fontSize: 11, padding: "4px 10px", borderRadius: 20, border: `0.5px solid ${T.stone}`, cursor: "pointer", background: type === t ? T.coral : T.white, color: type === t ? T.white : T.driftwood }}>{t}</button>
-            ))}
-          </div>
           <div style={{ display: "flex", gap: 8 }}>
             <PillBtn variant="grey" onClick={() => setShowBox(false)} small>cancel</PillBtn>
-            <PillBtn onClick={addGoal} small>save goal</PillBtn>
+            <PillBtn onClick={addGoal} small>save</PillBtn>
           </div>
         </Modal>
       )}
@@ -320,20 +315,20 @@ const MenuScreen = ({ onNav, checkins }) => {
     let count = 0, d = new Date();
     while (true) {
       const ci = checkins[d.toISOString().slice(0,10)];
-      if (!ci?.habits?.length || !ci.habits.every(h => h.done)) break;
+      if (!ci?.entries || Object.keys(ci.entries).length === 0) break;
       count++; d.setDate(d.getDate() - 1);
     }
     return count;
   })();
 
   const links = [
-    { label: "Dashboard", icon: "⊞", screen: "dashboard" },
-    { label: "Journal",   icon: "▤", screen: "journal"   },
-    { label: "Calendar",  icon: "▦", screen: "calendar"  },
-    { label: "Goal List", icon: "↗", screen: "goals"     },
-    { label: "Tracker",   icon: "◉", screen: "tracker"   },
-    { label: "Reports",   icon: "▨", screen: "reports"   },
-    { label: "Settings",  icon: "✧", screen: "settings"  },
+    { label: "Dashboard",      icon: "⊞", screen: "dashboard" },
+    { label: "Journal",        icon: "▤", screen: "journal"   },
+    { label: "Calendar",       icon: "▦", screen: "calendar"  },
+    { label: "Identity Goals", icon: "↗", screen: "goals"     },
+    { label: "Tracker",        icon: "◉", screen: "tracker"   },
+    { label: "Reports",        icon: "▨", screen: "reports"   },
+    { label: "Settings",       icon: "✧", screen: "settings"  },
   ];
 
   return (
@@ -370,22 +365,13 @@ const MenuScreen = ({ onNav, checkins }) => {
 };
 
 // ── SCREEN 3: Dashboard ───────────────────────────────────────────────────────
-const DashboardScreen = ({ onNav, goals, checkins, setCheckins, calendarPhotos }) => {
-  const today  = new Date();
-  const key    = todayKey();
-  const savedDone = (checkins[key]?.habits || []).reduce((acc, h) => ({ ...acc, [h.id]: h.done }), {});
-  const habits    = goals.map(g => ({ id: g.id, label: g.text, done: savedDone[g.id] || false }));
+const DashboardScreen = ({ onNav, goals, checkins, calendarPhotos }) => {
+  const today   = new Date();
+  const key     = todayKey();
+  const entries = checkins[key]?.entries || {};
+  const allCheckedIn = goals.length > 0 && goals.every(g => entries[g.id]?.checkIn);
 
-  const toggleHabit = (id) => {
-    const newHabits = habits.map(h => h.id === id ? { ...h, done: !h.done } : h);
-    setCheckins(c => ({ ...c, [key]: { ...(c[key] || {}), habits: newHabits } }));
-  };
-  const handleSaveAndReflect = () => {
-    setCheckins(c => ({ ...c, [key]: { ...(c[key] || {}), habits } }));
-    onNav(habits.filter(h => !h.done).length > 0 ? "reflect" : "response");
-  };
-
-  const dayName = today.toLocaleString("default", { weekday: "long" });
+  const dayName  = today.toLocaleString("default", { weekday: "long" });
   const dateLong = today.toLocaleString("default", { month: "long", day: "numeric" });
   const year = today.getFullYear(), month = today.getMonth();
   const firstDay = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month+1, 0).getDate();
@@ -401,18 +387,28 @@ const DashboardScreen = ({ onNav, goals, checkins, setCheckins, calendarPhotos }
             <span style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.bark }}>{dateLong}</span>
           </div>
           <Divider my={6} />
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, margin: "0 0 10px", fontWeight: 500 }}>Today's Habits</p>
-          {habits.length === 0 ? (
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, margin: "0 0 10px", fontWeight: 500 }}>Identity Goals</p>
+          {goals.length === 0 ? (
             <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, fontStyle: "italic" }}>No goals yet — <button onClick={() => onNav("goals")} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 11, color: T.coral, textDecoration: "underline", padding: 0 }}>add one</button></p>
           ) : (
-            habits.map(h => (
-              <button key={h.id} onClick={() => toggleHabit(h.id)} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", background: "none", border: "none", cursor: "pointer", padding: "5px 0", borderBottom: `0.5px solid ${T.sand}`, textAlign: "left" }}>
-                <div style={{ width: 14, height: 14, borderRadius: "50%", flexShrink: 0, border: `1.5px solid ${h.done ? T.coral : T.mist}`, background: h.done ? T.coral : "transparent", transition: "all 0.2s" }} />
-                <span style={{ fontFamily: "Georgia, serif", fontSize: 12, color: h.done ? T.mist : T.ink, textDecoration: h.done ? "line-through" : "none", transition: "all 0.2s" }}>{h.label}</span>
-              </button>
-            ))
+            goals.map(g => {
+              const checked = !!entries[g.id]?.checkIn;
+              return (
+                <div key={g.id} style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "5px 0", borderBottom: `0.5px solid ${T.sand}` }}>
+                  <div style={{ width: 14, height: 14, borderRadius: "50%", flexShrink: 0, marginTop: 2, border: `1.5px solid ${checked ? T.coral : T.mist}`, background: checked ? T.coral : "transparent", transition: "all 0.2s" }} />
+                  <span style={{ fontFamily: "Georgia, serif", fontSize: 11, color: checked ? T.mist : T.ink, textDecoration: checked ? "line-through" : "none", lineHeight: 1.5, transition: "all 0.2s" }}>{g.text}</span>
+                </div>
+              );
+            })
           )}
-          {habits.length > 0 && <div style={{ marginTop: 14, display: "flex", justifyContent: "flex-end" }}><PillBtn small onClick={handleSaveAndReflect}>Save & Reflect →</PillBtn></div>}
+          {goals.length > 0 && (
+            <div style={{ marginTop: 14, display: "flex", justifyContent: "flex-end" }}>
+              {allCheckedIn
+                ? <PillBtn small variant="ghost" onClick={() => onNav("mirror")}>View Mirror →</PillBtn>
+                : <PillBtn small onClick={() => onNav("checkin")}>Begin Check-In →</PillBtn>
+              }
+            </div>
+          )}
         </div>
       </LeftPage>
       <RightPage>
@@ -424,7 +420,6 @@ const DashboardScreen = ({ onNav, goals, checkins, setCheckins, calendarPhotos }
             <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.bark, margin: 0, letterSpacing: "0.04em" }}>{today.toLocaleString("default", { month: "long", year: "numeric" })}</p>
             <button onClick={() => onNav("calendar")} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 9, color: T.coral, padding: 0 }}>open →</button>
           </div>
-          {/* Mini calendar matching calendar page style */}
           <div style={{ display: "flex", borderBottom: `0.5px solid ${T.stone}`, marginBottom: 0 }}>
             {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => (
               <div key={d} style={{ flex: 1, textAlign: "center", fontFamily: "Georgia, serif", fontSize: 8, color: T.driftwood, padding: "2px 0" }}>{d}</div>
@@ -460,70 +455,199 @@ const DashboardScreen = ({ onNav, goals, checkins, setCheckins, calendarPhotos }
   );
 };
 
-// ── SCREEN 3b: Reflect ────────────────────────────────────────────────────────
-const ReflectScreen = ({ onNav, checkins, setCheckins }) => {
-  const key = todayKey(), todayCheckin = checkins[key] || { habits: [], reflections: {} };
-  const missedHabits = (todayCheckin.habits || []).filter(h => !h.done);
-  const [idx, setIdx]         = useState(0);
-  const [text, setText]       = useState("");
-  const [refs, setRefs]       = useState(todayCheckin.reflections || {});
+// ── SCREEN 3b: Check-In ───────────────────────────────────────────────────────
+const CheckInScreen = ({ onNav, goals, checkins, setCheckins }) => {
+  const key     = todayKey();
+  const entries = checkins[key]?.entries || {};
+  const [idx, setIdx]   = useState(0);
+  const [text, setText] = useState(() => entries[goals[0]?.id]?.checkIn || "");
 
-  if (missedHabits.length === 0) { onNav("response"); return null; }
-  const current = missedHabits[idx], isLast = idx === missedHabits.length - 1;
+  if (goals.length === 0) { onNav("dashboard"); return null; }
+  const current = goals[idx], isLast = idx === goals.length - 1;
 
-  const advance = () => {
-    const updated = text.trim() ? { ...refs, [current.id]: text.trim() } : refs;
-    setRefs(updated);
-    setCheckins(c => ({ ...c, [key]: { ...todayCheckin, reflections: updated } }));
-    setText("");
-    if (isLast) onNav("response"); else setIdx(i => i + 1);
+  const saveAndAdvance = () => {
+    setCheckins(c => ({
+      ...c,
+      [key]: {
+        ...(c[key] || {}),
+        entries: {
+          ...(c[key]?.entries || {}),
+          [current.id]: { ...(c[key]?.entries?.[current.id] || {}), checkIn: text.trim() }
+        }
+      }
+    }));
+    if (isLast) {
+      onNav("mirror");
+    } else {
+      const nextId = goals[idx + 1]?.id;
+      setText(entries[nextId]?.checkIn || "");
+      setIdx(i => i + 1);
+    }
   };
 
   return (
     <JournalSpread>
       <LeftPage>
-        <div style={{ padding: "16px 18px" }}>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist, letterSpacing: "0.06em", margin: "0 0 6px" }}>{idx + 1} of {missedHabits.length}</p>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: T.ink, fontWeight: 500, margin: "0 0 14px", lineHeight: 1.5 }}>What stopped you from doing<br /><em style={{ color: T.coral }}>"{current.label}"</em> today?</p>
+        <div style={{ padding: "14px 18px", display: "flex", flexDirection: "column", height: "100%", boxSizing: "border-box" }}>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.mist, letterSpacing: "0.06em", margin: "0 0 8px" }}>CHECK-IN — {idx + 1} of {goals.length}</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.driftwood, letterSpacing: "0.04em", margin: "0 0 4px" }}>who I want to be</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, fontStyle: "italic", lineHeight: 1.6, margin: "0 0 10px" }}>"{current.text}"</p>
           <Divider my={8} />
-          <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Take a moment to reflect..." autoFocus rows={6}
-            style={{ width: "100%", boxSizing: "border-box", padding: "10px 12px", borderRadius: 10, border: `1px solid ${T.stone}`, background: "rgba(255,255,255,0.5)", fontFamily: "Georgia, serif", fontSize: 12, color: T.ink, outline: "none", resize: "none", lineHeight: 1.7 }} />
-          <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-            <PillBtn variant="ghost" small onClick={advance}>skip</PillBtn>
-            <PillBtn small onClick={advance}>{isLast ? "done →" : "next →"}</PillBtn>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.driftwood, letterSpacing: "0.04em", margin: "0 0 8px" }}>who I was today</p>
+          <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Write honestly about what you actually did..." autoFocus rows={5}
+            style={{ width: "100%", boxSizing: "border-box", padding: "10px 12px", borderRadius: 10, border: `1px solid ${T.stone}`, background: "rgba(255,255,255,0.5)", fontFamily: "Georgia, serif", fontSize: 12, color: T.ink, outline: "none", resize: "none", lineHeight: 1.7, flex: 1 }} />
+          <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+            <PillBtn variant="ghost" small onClick={saveAndAdvance}>skip</PillBtn>
+            <PillBtn small onClick={saveAndAdvance}>{isLast ? "done →" : "next →"}</PillBtn>
           </div>
         </div>
       </LeftPage>
       <RightPage>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", padding: "0 20px" }}>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, fontStyle: "italic", color: T.driftwood, lineHeight: 1.8, textAlign: "center" }}>"Awareness is the first step<br />toward change."</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, fontStyle: "italic", color: T.driftwood, lineHeight: 1.9, textAlign: "center" }}>"Honesty is not<br />a punishment.<br />It's the beginning<br />of change."</p>
           <div style={{ width: 30, height: 1, background: T.stone, margin: "16px auto" }} />
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist, textAlign: "center" }}>{missedHabits.length} habit{missedHabits.length !== 1 ? "s" : ""} to reflect on</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist, textAlign: "center" }}>Goal {idx + 1} of {goals.length}</p>
         </div>
       </RightPage>
     </JournalSpread>
   );
 };
 
-// ── SCREEN 3c: Response ───────────────────────────────────────────────────────
-const ResponseScreen = ({ onNav, checkins }) => {
-  const key = todayKey(), ci = checkins[key] || { habits: [], reflections: {} };
-  const done = (ci.habits || []).filter(h => h.done), missed = (ci.habits || []).filter(h => !h.done);
-  const allDone = done.length > 0 && missed.length === 0;
+// ── SCREEN 3c: The Mirror ─────────────────────────────────────────────────────
+const MirrorScreen = ({ onNav, goals, checkins }) => {
+  const key     = todayKey();
+  const entries = checkins[key]?.entries || {};
+  const [idx, setIdx] = useState(0);
+
+  if (goals.length === 0) { onNav("dashboard"); return null; }
+  const current = goals[idx], isLast = idx === goals.length - 1;
+  const checkIn = entries[current.id]?.checkIn || "";
+
+  return (
+    <JournalSpread>
+      <LeftPage>
+        <div style={{ padding: "14px 18px", display: "flex", flexDirection: "column", height: "100%", boxSizing: "border-box" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <MenuIcon onClick={() => onNav("menu")} />
+            <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.coral, letterSpacing: "0.1em", margin: 0 }}>THE MIRROR</p>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.mist, margin: 0 }}>{idx + 1} / {goals.length}</p>
+          </div>
+          <Divider my={6} />
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.driftwood, letterSpacing: "0.04em", margin: "0 0 5px" }}>who I want to be</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, fontStyle: "italic", lineHeight: 1.6, margin: "0 0 12px" }}>"{current.text}"</p>
+          <Divider my={6} />
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.driftwood, letterSpacing: "0.04em", margin: "0 0 5px" }}>who I was today</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, color: checkIn ? T.ink : T.mist, lineHeight: 1.6, fontStyle: checkIn ? "normal" : "italic", flex: 1 }}>{checkIn || "no entry recorded"}</p>
+        </div>
+      </LeftPage>
+      <RightPage>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", padding: "0 20px", gap: 10 }}>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.driftwood, fontStyle: "italic", lineHeight: 1.9, textAlign: "center", margin: 0 }}>"The gap is visible.<br />No judgment —<br />just truth."</p>
+          <div style={{ width: 30, height: 1, background: T.stone, alignSelf: "center" }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
+            {!isLast && <PillBtn small variant="ghost" onClick={() => setIdx(i => i + 1)}>next goal →</PillBtn>}
+            <PillBtn small onClick={() => onNav("actionplan")}>Write Action Plan →</PillBtn>
+            {idx > 0 && <button onClick={() => setIdx(i => i - 1)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 10, color: T.mist }}>← prev</button>}
+          </div>
+        </div>
+      </RightPage>
+    </JournalSpread>
+  );
+};
+
+// ── SCREEN 3d: Action Plan ────────────────────────────────────────────────────
+const ActionPlanScreen = ({ onNav, goals, checkins, setCheckins }) => {
+  const key     = todayKey();
+  const entries = checkins[key]?.entries || {};
+  const [idx, setIdx]   = useState(0);
+  const [text, setText] = useState(() => entries[goals[0]?.id]?.actionPlan || "");
+
+  if (goals.length === 0) { onNav("dashboard"); return null; }
+  const current = goals[idx], isLast = idx === goals.length - 1;
+  const checkIn = entries[current.id]?.checkIn || "";
+
+  const saveAndAdvance = () => {
+    setCheckins(c => ({
+      ...c,
+      [key]: {
+        ...(c[key] || {}),
+        entries: {
+          ...(c[key]?.entries || {}),
+          [current.id]: { ...(c[key]?.entries?.[current.id] || {}), actionPlan: text.trim() }
+        }
+      }
+    }));
+    if (isLast) {
+      onNav("summary");
+    } else {
+      const nextId = goals[idx + 1]?.id;
+      setText(entries[nextId]?.actionPlan || "");
+      setIdx(i => i + 1);
+    }
+  };
+
+  return (
+    <JournalSpread>
+      <LeftPage>
+        <div style={{ padding: "12px 16px", display: "flex", flexDirection: "column", height: "100%", boxSizing: "border-box" }}>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.coral, letterSpacing: "0.08em", margin: "0 0 8px" }}>ACTION PLAN — {idx + 1} of {goals.length}</p>
+          <div style={{ background: "rgba(255,255,255,0.4)", borderRadius: 10, padding: "8px 10px", marginBottom: 8, border: `0.5px solid ${T.sand}` }}>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.driftwood, letterSpacing: "0.03em", margin: "0 0 3px" }}>identity</p>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink, fontStyle: "italic", lineHeight: 1.5, margin: "0 0 6px" }}>{current.text}</p>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.driftwood, letterSpacing: "0.03em", margin: "0 0 3px" }}>today</p>
+            <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: checkIn ? T.driftwood : T.mist, lineHeight: 1.5, margin: 0, fontStyle: checkIn ? "normal" : "italic" }}>{checkIn || "no entry"}</p>
+          </div>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink, fontStyle: "italic", lineHeight: 1.6, margin: "0 0 8px" }}>"What is one specific thing you will do next time to get closer to who you want to be?"</p>
+          <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Next time I will..." autoFocus rows={4}
+            style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: 10, border: `1px solid ${T.stone}`, background: "rgba(255,255,255,0.5)", fontFamily: "Georgia, serif", fontSize: 12, color: T.ink, outline: "none", resize: "none", lineHeight: 1.7, flex: 1 }} />
+          <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+            <PillBtn variant="ghost" small onClick={saveAndAdvance}>skip</PillBtn>
+            <PillBtn small onClick={saveAndAdvance}>{isLast ? "done →" : "next →"}</PillBtn>
+          </div>
+        </div>
+      </LeftPage>
+      <RightPage>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", padding: "0 20px" }}>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, fontStyle: "italic", color: T.driftwood, lineHeight: 1.9, textAlign: "center" }}>"The gap is closed<br />only through action."</p>
+          <div style={{ width: 30, height: 1, background: T.stone, margin: "16px auto" }} />
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist, textAlign: "center" }}>One concrete step forward.</p>
+        </div>
+      </RightPage>
+    </JournalSpread>
+  );
+};
+
+// ── SCREEN 3e: Summary ────────────────────────────────────────────────────────
+const SummaryScreen = ({ onNav, goals, checkins }) => {
+  const key     = todayKey();
+  const entries = checkins[key]?.entries || {};
+  const allDone = goals.length > 0 && goals.every(g => entries[g.id]?.checkIn);
   return (
     <JournalSpread>
       <LeftPage>
         <div style={{ padding: "12px 16px" }}>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, fontWeight: 500, margin: "0 0 2px" }}>Today's Summary</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, fontWeight: 500, margin: "0 0 2px" }}>Today's Check-In</p>
           <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist, margin: "0 0 10px" }}>{new Date().toLocaleString("default", { month: "long", day: "numeric", year: "numeric" })}</p>
           <Divider my={6} />
-          {done.length > 0 && <><p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.coral, letterSpacing: "0.04em", margin: "0 0 6px" }}>completed</p>{done.map(h => <div key={h.id} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}><span style={{ color: T.coral, fontSize: 10 }}>✓</span><span style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink }}>{h.label}</span></div>)}</>}
-          {missed.length > 0 && <><Divider my={8} /><p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.driftwood, letterSpacing: "0.04em", margin: "0 0 6px" }}>reflections</p>{missed.map(h => <div key={h.id} style={{ marginBottom: 8 }}><p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink, margin: "0 0 2px", fontStyle: "italic" }}>{h.label}</p><p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.driftwood, margin: 0, lineHeight: 1.5 }}>{(ci.reflections||{})[h.id] || <span style={{ color: T.mist }}>—</span>}</p></div>)}</>}
+          <div style={{ overflowY: "auto", maxHeight: 340 }}>
+            {goals.map(g => {
+              const e = entries[g.id] || {};
+              return (
+                <div key={g.id} style={{ marginBottom: 10 }}>
+                  <div style={{ display: "flex", gap: 6, alignItems: "flex-start" }}>
+                    <span style={{ color: e.checkIn ? T.coral : T.mist, fontSize: 10, marginTop: 2, flexShrink: 0 }}>{e.checkIn ? "✓" : "—"}</span>
+                    <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink, fontStyle: "italic", margin: 0, lineHeight: 1.5 }}>{g.text}</p>
+                  </div>
+                  {e.actionPlan && <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.driftwood, margin: "3px 0 0 16px", lineHeight: 1.5 }}>→ {e.actionPlan}</p>}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </LeftPage>
       <RightPage>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "0 20px", gap: 12 }}>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, fontStyle: "italic", color: T.driftwood, lineHeight: 1.8, textAlign: "center", margin: 0 }}>{allDone ? '"You did it — every single one. ✦"' : '"Every reflection is a step forward."'}</p>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, fontStyle: "italic", color: T.driftwood, lineHeight: 1.8, textAlign: "center", margin: 0 }}>{allDone ? '"You showed up for every part of yourself today. ✦"' : '"Every step toward the gap is growth."'}</p>
           <div style={{ width: 30, height: 1, background: T.stone }} />
           <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%", alignItems: "center" }}>
             <PillBtn small onClick={() => onNav("journal")}>+ open journal</PillBtn>
@@ -535,15 +659,16 @@ const ResponseScreen = ({ onNav, checkins }) => {
   );
 };
 
-// ── SCREEN 3d: Day Report ─────────────────────────────────────────────────────
-const DayReportScreen = ({ onNav, checkins, journalEntries, setJournalEntries, dateKey }) => {
-  const ci = checkins[dateKey] || { habits: [], reflections: {}, mood: null };
-  const entry = journalEntries[dateKey] || { text: "" };
+// ── SCREEN 3f: Day Report ─────────────────────────────────────────────────────
+const DayReportScreen = ({ onNav, goals, checkins, journalEntries, setJournalEntries, dateKey }) => {
+  const ci      = checkins[dateKey] || {};
+  const entries = ci.entries || {};
+  const entry   = journalEntries[dateKey] || { text: "" };
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(entry.text);
-  const done = ci.habits.filter(h => h.done), missed = ci.habits.filter(h => !h.done);
   const dateLabel = new Date(dateKey + "T00:00:00").toLocaleString("default", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
   const saveEntry = () => { setJournalEntries(j => ({ ...j, [dateKey]: { ...entry, text } })); setEditing(false); };
+  const hasData = Object.keys(entries).length > 0;
 
   return (
     <JournalSpread>
@@ -552,9 +677,20 @@ const DayReportScreen = ({ onNav, checkins, journalEntries, setJournalEntries, d
           <button onClick={() => onNav("dashboard")} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 11, color: T.driftwood, padding: 0, marginBottom: 6 }}>← back</button>
           <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink, fontWeight: 500, margin: "0 0 2px" }}>{dateLabel}</p>
           <Divider my={6} />
-          {ci.habits.length === 0 ? <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, fontStyle: "italic" }}>No check-in recorded for this day.</p> : (
-            <>{done.length > 0 && <><p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.coral, letterSpacing: "0.05em", margin: "0 0 5px" }}>completed</p>{done.map(h => <div key={h.id} style={{ display: "flex", gap: 6, marginBottom: 4, alignItems: "center" }}><span style={{ color: T.coral, fontSize: 10 }}>✓</span><span style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink }}>{h.label}</span></div>)}</>}
-            {missed.length > 0 && <><Divider my={6} /><p style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.driftwood, letterSpacing: "0.05em", margin: "0 0 5px" }}>missed</p>{missed.map(h => <div key={h.id} style={{ marginBottom: 6 }}><span style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.driftwood, fontStyle: "italic" }}>{h.label}</span>{ci.reflections?.[h.id] && <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist, margin: "2px 0 0", lineHeight: 1.5 }}>"{ci.reflections[h.id]}"</p>}</div>)}</>}</>
+          {!hasData ? <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, fontStyle: "italic" }}>No check-in recorded for this day.</p> : (
+            <div style={{ overflowY: "auto", maxHeight: 360 }}>
+              {goals.map(g => {
+                const e = entries[g.id];
+                if (!e) return null;
+                return (
+                  <div key={g.id} style={{ marginBottom: 10 }}>
+                    <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink, fontStyle: "italic", margin: "0 0 2px", lineHeight: 1.4 }}>{g.text}</p>
+                    {e.checkIn && <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.driftwood, margin: "0 0 2px", lineHeight: 1.5 }}>{e.checkIn}</p>}
+                    {e.actionPlan && <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.coral, margin: 0, lineHeight: 1.5 }}>→ {e.actionPlan}</p>}
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </LeftPage>
@@ -576,17 +712,16 @@ const DayReportScreen = ({ onNav, checkins, journalEntries, setJournalEntries, d
   );
 };
 
-// ── SCREEN 4: Goals ───────────────────────────────────────────────────────────
+// ── SCREEN 4: Identity Goals ──────────────────────────────────────────────────
 const GoalsScreen = ({ onNav, goals, setGoals }) => {
-  const [showAdd, setShowAdd]       = useState(false);
-  const [newText, setNewText]       = useState("");
-  const [newType, setNewType]       = useState("daily");
-  const [deleting, setDeleting]     = useState(null);
-  const [delReason, setDelReason]   = useState("");
-  const [editing, setEditing]       = useState(null);
-  const [editText, setEditText]     = useState("");
+  const [showAdd, setShowAdd]     = useState(false);
+  const [newText, setNewText]     = useState("");
+  const [deleting, setDeleting]   = useState(null);
+  const [delReason, setDelReason] = useState("");
+  const [editing, setEditing]     = useState(null);
+  const [editText, setEditText]   = useState("");
 
-  const addGoal = () => { if (!newText.trim()) return; setGoals(g => [...g, { id: Date.now(), text: newText.trim(), type: newType }]); setNewText(""); setShowAdd(false); };
+  const addGoal = () => { if (!newText.trim()) return; setGoals(g => [...g, { id: Date.now(), text: newText.trim() }]); setNewText(""); setShowAdd(false); };
   const confirmDelete = () => { const g = deleting, r = delReason; setGoals(gs => gs.filter(x => x.id !== g.id)); setDeleting(null); setDelReason(""); onNav("deleteresponse", { habit: g.text, reason: r }); };
   const saveEdit = () => { setGoals(gs => gs.map(x => x.id === editing.id ? { ...x, text: editText } : x)); setEditing(null); };
 
@@ -596,37 +731,32 @@ const GoalsScreen = ({ onNav, goals, setGoals }) => {
         <div style={{ padding: "8px 14px" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
             <MenuIcon onClick={() => onNav("menu")} />
-            <span style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, fontWeight: 500 }}>Current Goals</span>
+            <span style={{ fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, fontWeight: 500 }}>Identity Goals</span>
             <button onClick={() => setShowAdd(true)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, color: T.coral, lineHeight: 1 }}>+</button>
           </div>
           <Divider my={6} />
           {goals.length === 0 ? <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, fontStyle: "italic", marginTop: 8 }}>No goals yet — press + to add one</p> : (
             goals.map(g => (
-              <div key={g.id} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 0", borderBottom: `0.5px solid ${T.sand}` }}>
-                <span style={{ fontSize: 8, color: T.coral }}>●</span>
-                <span style={{ fontFamily: "Georgia, serif", fontSize: 12, color: T.ink, flex: 1 }}>{g.text}</span>
-                <span style={{ fontFamily: "Georgia, serif", fontSize: 9, color: T.mist }}>{g.type}</span>
-                <button onClick={() => { setEditing(g); setEditText(g.text); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: T.driftwood }}>✎</button>
-                <button onClick={() => setDeleting(g)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: T.coral }}>✕</button>
+              <div key={g.id} style={{ display: "flex", alignItems: "flex-start", gap: 6, padding: "6px 0", borderBottom: `0.5px solid ${T.sand}` }}>
+                <span style={{ fontSize: 8, color: T.coral, marginTop: 4, flexShrink: 0 }}>●</span>
+                <span style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.ink, flex: 1, lineHeight: 1.5 }}>{g.text}</span>
+                <button onClick={() => { setEditing(g); setEditText(g.text); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: T.driftwood, flexShrink: 0 }}>✎</button>
+                <button onClick={() => setDeleting(g)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: T.coral, flexShrink: 0 }}>✕</button>
               </div>
             ))
           )}
         </div>
       </LeftPage>
       <RightPage>
-        <div style={{ padding: "16px 12px" }}>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, color: T.driftwood, marginBottom: 8, fontStyle: "italic" }}>"Goals are dreams with deadlines."</p>
-          <Divider />
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.mist, margin: "8px 0 4px" }}>by type</p>
-          {["daily","weekly","monthly"].map(t => {
-            const count = goals.filter(g => g.type === t).length;
-            return <div key={t} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}><span style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.driftwood, width: 52 }}>{t}</span><div style={{ flex: 1, height: 6, background: T.sand, borderRadius: 3 }}><div style={{ width: `${(count/Math.max(goals.length,1))*100}%`, height: "100%", background: T.coral, borderRadius: 3, transition: "width 0.4s" }} /></div><span style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist }}>{count}</span></div>;
-          })}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "0 20px" }}>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 12, color: T.driftwood, fontStyle: "italic", textAlign: "center", lineHeight: 1.9 }}>"Identity is not who you have been.<br />It's who you are<br />deciding to become."</p>
+          <div style={{ width: 30, height: 1, background: T.stone, margin: "16px 0" }} />
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 10, color: T.mist, textAlign: "center" }}>{goals.length} identity goal{goals.length !== 1 ? "s" : ""}</p>
         </div>
       </RightPage>
-      {showAdd && <Modal onClose={() => setShowAdd(false)}><p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: T.ink, marginBottom: 12 }}>Add a new goal</p><input value={newText} onChange={e => setNewText(e.target.value)} onKeyDown={e => e.key === "Enter" && addGoal()} placeholder="start typing..." autoFocus style={{ width: "100%", boxSizing: "border-box", padding: "8px 12px", borderRadius: 10, border: `1px solid ${T.stone}`, background: T.white, fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, outline: "none", marginBottom: 12 }} /><div style={{ display: "flex", gap: 8, marginBottom: 14 }}>{["daily","weekly","monthly"].map(t => <button key={t} onClick={() => setNewType(t)} style={{ fontFamily: "Georgia, serif", fontSize: 11, padding: "4px 10px", borderRadius: 20, border: `0.5px solid ${T.stone}`, cursor: "pointer", background: newType===t?T.coral:T.white, color: newType===t?T.white:T.driftwood }}>{t}</button>)}</div><div style={{ display: "flex", gap: 8 }}><PillBtn variant="grey" small onClick={() => setShowAdd(false)}>cancel</PillBtn><PillBtn small onClick={addGoal}>save goal</PillBtn></div></Modal>}
+      {showAdd && <Modal onClose={() => setShowAdd(false)}><p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: T.ink, marginBottom: 4 }}>Add an identity goal</p><p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.driftwood, marginBottom: 12, fontStyle: "italic" }}>Who do you want to become?</p><input value={newText} onChange={e => setNewText(e.target.value)} onKeyDown={e => e.key === "Enter" && addGoal()} placeholder="I am someone who..." autoFocus style={{ width: "100%", boxSizing: "border-box", padding: "8px 12px", borderRadius: 10, border: `1px solid ${T.stone}`, background: T.white, fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, outline: "none", marginBottom: 14 }} /><div style={{ display: "flex", gap: 8 }}><PillBtn variant="grey" small onClick={() => setShowAdd(false)}>cancel</PillBtn><PillBtn small onClick={addGoal}>save</PillBtn></div></Modal>}
       {deleting && <Modal onClose={() => { setDeleting(null); setDelReason(""); }}><p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: T.ink, marginBottom: 4 }}>Why are you letting go of <em style={{ color: T.coral }}>"{deleting.text}"</em>?</p><p style={{ fontFamily: "Georgia, serif", fontSize: 11, color: T.driftwood, marginBottom: 12 }}>Take a moment to reflect before moving on.</p><textarea value={delReason} onChange={e => setDelReason(e.target.value)} placeholder="I'm letting this go because..." autoFocus rows={4} style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: 10, border: `1px solid ${T.stone}`, background: T.white, fontFamily: "Georgia, serif", fontSize: 12, color: T.ink, outline: "none", resize: "none", marginBottom: 14 }} /><div style={{ display: "flex", gap: 10 }}><PillBtn variant="grey" small onClick={() => { setDeleting(null); setDelReason(""); }}>cancel</PillBtn><PillBtn small onClick={confirmDelete}>let it go →</PillBtn></div></Modal>}
-      {editing && <Modal onClose={() => setEditing(null)}><p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: T.ink, marginBottom: 12 }}>Edit goal</p><input value={editText} onChange={e => setEditText(e.target.value)} onKeyDown={e => e.key === "Enter" && saveEdit()} autoFocus style={{ width: "100%", boxSizing: "border-box", padding: "8px 12px", borderRadius: 10, border: `1px solid ${T.stone}`, background: T.white, fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, outline: "none", marginBottom: 14 }} /><div style={{ display: "flex", gap: 8 }}><PillBtn variant="grey" small onClick={() => setEditing(null)}>cancel</PillBtn><PillBtn small onClick={saveEdit}>save</PillBtn></div></Modal>}
+      {editing && <Modal onClose={() => setEditing(null)}><p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: T.ink, marginBottom: 12 }}>Edit identity goal</p><input value={editText} onChange={e => setEditText(e.target.value)} onKeyDown={e => e.key === "Enter" && saveEdit()} autoFocus style={{ width: "100%", boxSizing: "border-box", padding: "8px 12px", borderRadius: 10, border: `1px solid ${T.stone}`, background: T.white, fontFamily: "Georgia, serif", fontSize: 13, color: T.ink, outline: "none", marginBottom: 14 }} /><div style={{ display: "flex", gap: 8 }}><PillBtn variant="grey" small onClick={() => setEditing(null)}>cancel</PillBtn><PillBtn small onClick={saveEdit}>save</PillBtn></div></Modal>}
     </JournalSpread>
   );
 };
@@ -1084,25 +1214,39 @@ export default function App() {
   useEffect(() => save("aj_calendarStickers", calendarStickers), [calendarStickers]);
   useEffect(() => save("aj_calendarPhotoConfig", calendarPhotoConfig), [calendarPhotoConfig]);
 
+  // Migrate v1 data (goals had a .type field; checkins used .habits array)
+  useEffect(() => {
+    if (localStorage.getItem("aj_version") !== "2") {
+      if (goals.length > 0 && goals[0]?.type !== undefined) {
+        setGoals([]);
+        setCheckins({});
+        setScreen("onboarding");
+      }
+      localStorage.setItem("aj_version", "2");
+    }
+  }, []);
+
   const onNav = (s, data = {}) => { setNavData(data); setScreen(s); };
 
   const bg = theme === "dark" ? "#1e1a17" : "#f0e9e0";
   const shared = { onNav, goals, setGoals, checkins, setCheckins, journalEntries, setJournalEntries, calendarPhotos, setCalendarPhotos, calendarStickers, setCalendarStickers, calendarPhotoConfig, setCalendarPhotoConfig, theme, setTheme };
 
   const screenMap = {
-    onboarding:     <OnboardingScreen {...shared} onDone={() => setScreen("menu")} />,
-    menu:           <MenuScreen       {...shared} />,
-    dashboard:      <DashboardScreen  {...shared} />,
-    reflect:        <ReflectScreen    {...shared} />,
-    response:       <ResponseScreen   {...shared} />,
-    goals:          <GoalsScreen      {...shared} />,
+    onboarding:     <OnboardingScreen  {...shared} onDone={() => setScreen("menu")} />,
+    menu:           <MenuScreen        {...shared} />,
+    dashboard:      <DashboardScreen   {...shared} />,
+    checkin:        <CheckInScreen     {...shared} />,
+    mirror:         <MirrorScreen      {...shared} />,
+    actionplan:     <ActionPlanScreen  {...shared} />,
+    summary:        <SummaryScreen     {...shared} />,
+    goals:          <GoalsScreen       {...shared} />,
     deleteresponse: <DeleteResponseScreen onNav={onNav} habit={navData.habit||""} reason={navData.reason||""} />,
-    journal:        <JournalScreen    {...shared} />,
-    calendar:       <CalendarScreen   {...shared} />,
-    tracker:        <TrackerScreen    {...shared} />,
-    reports:        <ReportsScreen    {...shared} />,
-    settings:       <SettingsScreen   {...shared} />,
-    dayreport:      <DayReportScreen  {...shared} dateKey={navData.dateKey || todayKey()} />,
+    journal:        <JournalScreen     {...shared} />,
+    calendar:       <CalendarScreen    {...shared} />,
+    tracker:        <TrackerScreen     {...shared} />,
+    reports:        <ReportsScreen     {...shared} />,
+    settings:       <SettingsScreen    {...shared} />,
+    dayreport:      <DayReportScreen   {...shared} dateKey={navData.dateKey || todayKey()} />,
   };
 
   return (
